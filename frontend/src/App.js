@@ -1,28 +1,38 @@
-// frontend/src/App.js
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Signup from './components/Signup';
+import Login from './components/Login';
+import Home from './components/Home'; // A simple home page that users can see after logging in or signing up
+import Dashboard from './components/Dashboard'; // Dashboard for logged-in users
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
-import { AuthProvider } from './context/AuthContext';
 
-function App() {
+const App = () => {
+  // Check if user is logged in (check for token in localStorage)
+  const isLoggedIn = localStorage.getItem('token') ? true : false;
+
   return (
-    <AuthProvider>
-      <Router>
-        <Navbar />
+    <Router>
+      <Navbar />
+      <div className="container">
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/login" element={<Login />} />
+          
+          {/* Protected Routes - Only accessible if logged in */}
+          {isLoggedIn && (
+            <>
+              <Route path="/dashboard" element={<Dashboard />} />
+            </>
+          )}
+          
+          {/* Fallback Route for 404 */}
+          <Route path="*" element={<h2>Page Not Found</h2>} />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
