@@ -1,45 +1,46 @@
-// Import necessary modules
+// backend/server.js
 const express = require('express');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv'); // To load environment variables
-const cors = require('cors'); // To handle Cross-Origin requests
+const cors = require('cors');
+const dotenv = require('dotenv');
+const taskRoutes = require('./routes/taskRoutes');
+const subjectRoutes = require('./routes/subjectRoutes');
+const authRoutes = require('./routes/authRoutes');
 
-// Load environment variables from .env file
+// Initialize environment variables
 dotenv.config();
 
-// Create an instance of Express app
+// Create an Express app
 const app = express();
 
-// Middleware
-app.use(cors()); // Enable CORS for all origins
-app.use(express.json()); // For parsing JSON data
+// Middlewares
+app.use(express.json()); // Allows the server to parse incoming JSON
+app.use(cors()); // Enables Cross-Origin Resource Sharing
 
-// MongoDB connection
+// Routes
+app.use('/api/tasks', taskRoutes); // Route to handle task-related requests
+app.use('/api/subjects', subjectRoutes); // Route to handle subject-related requests
+app.use('/api/auth', authRoutes); // Route to handle authentication requests
+
+// Database connection
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
+    await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("MongoDB Connected");
+    console.log("Connected to MongoDB");
   } catch (error) {
-    console.error("Error connecting to MongoDB:", error.message);
-    process.exit(1); // Exit the process with failure if DB connection fails
+    console.error("Error connecting to MongoDB", error.message);
+    process.exit(1); // Exit process with failure
   }
 };
 
-// Call the MongoDB connection function
+// Connect to the database
 connectDB();
 
-// Basic route for testing
-app.get('/', (req, res) => {
-  res.send("Welcome to the Study Planner App Backend!");
-});
-
-// Define your other routes here, e.g., CRUD operations for Study Plans, Users, etc.
-
-// Start the server
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

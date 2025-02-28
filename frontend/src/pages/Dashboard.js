@@ -1,34 +1,36 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+// frontend/src/pages/Dashboard.js
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Dashboard = () => {
-  const [sessions, setSessions] = useState([]);
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    const fetchSessions = async () => {
-      const token = localStorage.getItem("token");
-
-      try {
-        const { data } = await axios.get("http://localhost:5000/api/study/1", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setSessions(data);
-      } catch (err) {
-        console.error("Error fetching study sessions:", err);
-      }
+    const fetchTasks = async () => {
+      const token = localStorage.getItem('token');
+      const { data } = await axios.get('http://localhost:5000/api/tasks', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setTasks(data);
     };
 
-    fetchSessions();
+    fetchTasks();
   }, []);
 
   return (
     <div>
-      <h1>Dashboard</h1>
-      <ul>
-        {sessions.map((session) => (
-          <li key={session._id}>{session.title}</li>
-        ))}
-      </ul>
+      <h2>Dashboard</h2>
+      <div>
+        <h3>Your Tasks</h3>
+        <ul>
+          {tasks.map((task) => (
+            <li key={task._id}>{task.title}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
