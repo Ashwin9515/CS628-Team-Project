@@ -1,10 +1,11 @@
 import './App.css';
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
+import Dashboard from "./components/dashboard";
+import CreateTask from "./components/create_task";
 
 function App() {
   return (
     <BrowserRouter>
-      <h1>Study Planner</h1>
       <div className="container">
         <nav className="navbar">
           <ul>
@@ -14,12 +15,16 @@ function App() {
             <li>
               <NavLink to="/dashboard" activeClassName="active">Dashboard</NavLink>
             </li>
+            <li>
+              <NavLink to="/assignments" activeClassName="active">Tasks</NavLink>
+            </li>
           </ul>
         </nav>
         <div className="content">
           <Routes>
             <Route path="/" element={<div>Welcome to study planner</div>} />
-            <Route path="/dashboard" element={<div>This is your dashboard</div>} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/assignments" element={<CreateTask />} />
           </Routes>
         </div>
       </div>
